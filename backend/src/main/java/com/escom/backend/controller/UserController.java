@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.escom.backend.dto.AuthDTO;
 import com.escom.backend.dto.UserDTO;
 import com.escom.backend.service.UserService;
 
@@ -25,9 +26,8 @@ public class UserController {
   }
 
   @PostMapping("/google")
-  public ResponseEntity<?> login(@AuthenticationPrincipal Jwt jwt) {
-    String email = jwt.getClaim("email");
-    System.out.println("Usuario autenticado con email: " + email);
-    return ResponseEntity.ok("Usuario autenticado con email: " + email);
+  public ResponseEntity<AuthDTO> login(@AuthenticationPrincipal Jwt jwt) {
+    AuthDTO authDTO = userService.loginWithGoogle(jwt);
+    return ResponseEntity.ok(authDTO);
   }
 }
