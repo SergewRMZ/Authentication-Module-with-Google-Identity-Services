@@ -2,6 +2,8 @@ package com.escom.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +17,17 @@ import com.escom.backend.service.UserService;
 public class UserController {
   @Autowired
   private UserService userService;
-
+  
   @PostMapping("/register")
   public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDto) {
     UserDTO registeredUser = userService.register(userDto);
     return ResponseEntity.ok(registeredUser);
+  }
+
+  @PostMapping("/google")
+  public ResponseEntity<?> login(@AuthenticationPrincipal Jwt jwt) {
+    String email = jwt.getClaim("email");
+    System.out.println("Usuario autenticado con email: " + email);
+    return ResponseEntity.ok("Usuario autenticado con email: " + email);
   }
 }
